@@ -5,8 +5,15 @@ int bubblesort(int b[], int size);
 
 int main()
 {
-    int a[] = {1, 2, 1, 2, 2, 3, 3, 4, 5, 6, 6};
-    int size = sizeof(a) / sizeof(a[0]);
+    int size;
+    printf("Enter the size of array ");
+    scanf("%d",&size);
+    int a[size];
+
+for(int i=0;i<size;i++){
+    printf("Enter the %d element of array ",i+1);
+    scanf("%d",&a[i]);
+}
 
         int choice;
     printf("\nEnter the choice for sort 1 for bubble else for insertion\n");
