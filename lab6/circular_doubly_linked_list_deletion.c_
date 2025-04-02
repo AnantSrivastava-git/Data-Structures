@@ -1,0 +1,151 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+    struct Node* prev;
+};
+
+struct Node* listcreation() {
+    struct Node *newnode, *temp, *head = NULL;
+    int value, addnode;
+
+    do {
+        newnode = (struct Node*)malloc(sizeof(struct Node));
+        printf("Enter the value you want to insert in node: ");
+        scanf("%d", &value);
+        newnode->data = value;
+        newnode->next = NULL;
+        newnode->prev = NULL;
+
+        if (head == NULL) {
+            head = newnode;
+            temp = newnode;
+        } else {
+            temp->next = newnode;
+            newnode->prev = temp;
+            temp = newnode;
+        }
+
+        printf("Do you want to enter another new node? (1 for YES, 0 for NO): ");
+        scanf("%d", &addnode);
+
+    } while (addnode);
+
+    temp->next = head;
+    head->prev = temp;
+
+    return head;
+}
+
+
+void displayList(struct Node* head) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node* temp = head;
+    do {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    } while (temp != head);
+    printf("\n");
+}
+
+
+struct Node* deleteAtBeginning(struct Node* head) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return NULL;
+    }
+
+    struct Node* temp = head;
+
+    if (head->next == head) { 
+        free(head);
+        return NULL;
+    }
+
+    struct Node* last = head->prev;
+    head = head->next;
+    head->prev = last;
+    last->next = head;
+
+    free(temp);
+    return head;
+}
+
+
+struct Node* deleteAtLast(struct Node* head) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return NULL;
+    }
+
+    struct Node* last = head->prev;
+
+    if (head->next == head) { 
+        free(head);
+        return NULL;
+    }
+
+    last->prev->next = head;
+    head->prev = last->prev;
+
+    free(last);
+    return head;
+}
+
+
+struct Node* deleteAtPosition(struct Node* head, int pos) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return NULL;
+    }
+
+    struct Node* temp = head;
+    int count = 1;
+
+    if (pos == 1) { 
+        return deleteAtBeginning(head);
+    }
+
+    do {
+        if (count == pos) {
+            temp->prev->next = temp->next;
+            temp->next->prev = temp->prev;
+            free(temp);
+            return head;
+        }
+        temp = temp->next;
+        count++;
+    } while (temp != head);
+
+    printf("Invalid position!\n");
+    return head;
+}
+
+
+int main() {
+    struct Node* head = NULL;
+    head = listcreation();
+    displayList(head);
+
+    printf("\nDeleting first node\n");
+    head = deleteAtBeginning(head);
+    displayList(head);
+
+    printf("\nDeleting last node\n");
+    head = deleteAtLast(head);
+    displayList(head);
+
+    int pos;
+    printf("\nEnter position to delete: ");
+    scanf("%d", &pos);
+    head = deleteAtPosition(head, pos);
+    displayList(head);
+
+    return 0;
+}
