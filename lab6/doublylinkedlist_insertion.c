@@ -39,28 +39,33 @@ struct node* linked_list_creation(struct node* tail) {
 
 
 
-void deleteatspecific(struct node* tail, int pos) {
+void insertatspecific(struct node* tail, int pos) {
     if (head == NULL) {
         printf("List is empty\n");
         return;
     }
     struct node *temp = head;
+    struct node *newnode;
+    int value;
+    newnode = (struct node *)(malloc(sizeof(struct node)));
+    printf("\nEnter the value you want to insert in node: ");
+    scanf("%d", &value);
+    newnode->data = value;
     if (pos == 1) {
-            head = head->next;
-            if (head != NULL) head->prev = NULL;
-            free(temp);
+        head->prev = newnode;
+        newnode->next = head;
+        newnode->prev = NULL;
+
             return;
         }
 
     for (int i = 1; temp != NULL && i < pos; i++)
         temp = temp->next;
-    
-    if (temp->next != NULL){
-    temp->next->prev = temp->prev;
-    }
-    if (temp->prev != NULL) 
-    temp->prev->next = temp->next;
-    free(temp);
+
+        newnode->next = temp->next;
+        newnode->prev = temp;
+        if (temp->next != NULL) temp->next->prev = newnode;
+        temp->next = newnode;
 }
 
 void print(struct node* head) {
@@ -85,7 +90,7 @@ int main() {
     int position;
     printf("Enter position: "); 
     scanf("%d", &position); 
-    deleteatspecific(tail1,position);
+    insertatspecific(tail1,position);
     print(head);
     return 0;
 }
