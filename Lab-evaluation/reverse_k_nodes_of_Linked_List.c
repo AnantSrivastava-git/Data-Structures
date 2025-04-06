@@ -7,29 +7,6 @@ struct list
     struct list *next;
 };
 
-#define N 100
-int stack[N];
-
-int pusharray(int top, int val)
-{
-    if (top == -1)
-    {
-        top++;
-        stack[top] = val;
-    }
-    else if (top == N - 1)
-    {
-        printf("Stack is full");
-        return top;
-    }
-    else
-    {
-        top++;
-        stack[top] = val;
-    }
-    return top;
-}
-
 struct list *listcreation()
 {
     struct list *newnode, *temp, *head = NULL;
@@ -75,6 +52,27 @@ void displayList(struct list *head)
     printf("NULL\n");
 }
 
+struct list *reverse_k_nodes(int k, struct list *start)
+{
+    struct list *currentnode, *prevnode, *temp, *nextnode;
+    temp = start;
+    prevnode = NULL;
+    currentnode = temp;
+    nextnode = temp;
+
+    for (int i = 0; i < k; i++)
+    {
+
+        nextnode = currentnode->next;
+        currentnode->next = prevnode;
+        prevnode = currentnode;
+        currentnode = nextnode;
+    }
+    start = prevnode;
+    temp->next = currentnode;
+    return start;
+}
+
 int main()
 {
     struct list *head = NULL;
@@ -83,27 +81,33 @@ int main()
     int k = 3, n = 6;
     // printf("Enter the size of group of nodes");
     // scanf("%d", &k);
-    struct list *start = head, *temp, *fast, *temp2;
+    struct list *start = head, *temp,*fast,*temp2;
 
-    int top = -1;
-    temp = start;
-    for (int c = 0; c < n / k; c++)
-    {
-        for (int i = 0; i < k; i++)
-        {
-            top = pusharray(top, temp->data);
-            temp = temp->next;
-        }
+    for (int i = 0; i < 2; i++)
+    {   
         temp = start;
-        for (int i = 0; i < k; i++)
+        fast = start;
+        for (int j = 1; j < k; j++)/*kuch ho toh 0 krde*/
         {
-            temp->data = stack[top];
-            top--;
             temp = temp->next;
+            fast = fast->next;
         }
+        temp = temp->next;
+        start = reverse_k_nodes(k, start);
+        if(i==1){
+            head = start;
+        }
+        temp2 = start;
+        while(temp2->next!=NULL){
+            temp2 = temp2->next;
+        }
+
+        temp2 ->next = fast;
         start = temp;
     }
 
+
     displayList(head);
+
     return 0;
 }
