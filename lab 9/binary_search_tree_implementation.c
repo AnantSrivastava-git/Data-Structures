@@ -78,6 +78,24 @@ struct tree* delete(struct tree* root, int val) {
     return root;
 }
 
+struct tree* Insert(struct tree *root,int val) {
+
+    if(root == NULL){
+    struct tree* node = (struct tree*)malloc(sizeof(struct tree));
+    node->data = val;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+	else if(val <= root->data)
+		root->left = Insert(root->left,val);
+	else 
+		root->right = Insert(root->right,val);
+	return root;
+}
+
+
 void preorder(struct tree * root){
     if(root == NULL)
     return ;
@@ -104,5 +122,9 @@ int main()
     else
     printf("Not Found!");
     printf("\n");
+    Insert(root,45);
+    preorder(root);
+    delete(root,45);
+    preorder(root);
     return 0;
 }
